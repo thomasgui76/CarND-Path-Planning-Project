@@ -6,6 +6,7 @@
 #include <vector>
 
 // for convenience
+using namespace std;
 using std::string;
 using std::vector;
 
@@ -152,6 +153,42 @@ vector<double> getXY(double s, double d, const vector<double> &maps_s,
   double y = seg_y + d*sin(perp_heading);
 
   return {x,y};
+}
+
+template <typename T>
+void printVector1D(const vector<T>& my_vector){
+  cout<<"[";
+  if(!my_vector.empty()){
+    for(int i=0; i<my_vector.size(); ++i){
+      cout<<my_vector[i];
+      if (i != my_vector.size()-1){
+        cout<<",";
+      }
+    }
+  }
+  cout<<"]";  
+}
+
+template <typename T>
+void printVector2D(const vector<vector<T>>& my_2Dvector){
+  cout<<"[";
+  if (!my_2Dvector.empty()){
+    for (int i=0; i<my_2Dvector.size();++i){
+      if(i != 0){
+        cout<<" ";
+      }
+      printVector1D(my_2Dvector[i]);
+      if(i!=my_2Dvector.size()-1){
+        cout<<","<<endl;
+      }
+    }
+  }
+  else
+  {
+    // cout<<"the 2D vector is empty!"<<endl;
+  }
+  cout<<"]"<<endl;
+
 }
 
 #endif  // HELPERS_H
