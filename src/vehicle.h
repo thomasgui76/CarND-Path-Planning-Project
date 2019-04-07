@@ -156,21 +156,21 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
     if(!car_ahead.empty()){
         double distance_to_ahead = get_nearest_distance(target_velocity,car_ahead,DT);
         if(state == "LCL" || state == "LCR"){
-            distance_to_ahead-=6;
+            distance_to_ahead-=12;
         }
         if(distance_to_ahead > FOLLOW_DISTANCE && distance_to_ahead < 2 * FOLLOW_DISTANCE){
             cout<<"approach to car_ahead"<<endl;
             target_velocity = car_ahead[1];
             if (!car_behind.empty()){
                 // target_velocity += 0.112;
-                target_velocity = (target_velocity+car_behind[1])/2;
+                target_velocity = (target_velocity+car_behind[1])/2+0.224;
                 // target_velocity = car_behind[1];
                 // predict car_behind postion after duration time
                 // and compare with ego_car's position after duration time
                 // double distance_to_behind = this->s - car_behind[0];
                 double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
                 if(state == "LCL" || state == "LCR"){
-                    distance_to_behind -=6;
+                    distance_to_behind -=12;
                 }
                 if(distance_to_behind < FOLLOW_DISTANCE){
                     if(state == "LCL" || state == "LCR"){
@@ -208,7 +208,7 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
         if (!car_behind.empty()){
             double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
             if(state == "LCL" || state == "LCR"){
-                distance_to_behind -=6;
+                distance_to_behind -=12;
             }
             if(distance_to_behind < FOLLOW_DISTANCE){
                 if(state == "LCL" || state == "LCR"){

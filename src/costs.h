@@ -11,7 +11,7 @@
 using namespace std;
 
 const double collision_weight = pow(10,5);
-const double buffer_weight = pow(10,4);
+const double buffer_weight = pow(10,3);
 const double efficiency_weight = pow(10,3);
 const double off_middle_lane_weight = pow(10,3);
 const double keep_lane_weight = pow(10,3);
@@ -131,7 +131,7 @@ double get_off_middle_lane_cost(const vector<vector<double>> &trajectory,const m
     // int target_lane = int(target_d/4);
     // double cost = logistic(sqrt(pow((target_d-6),2)));
     cout<<"off_lane value: "<<fabs(target_d-6)<<endl;
-    double cost = logistic(fabs(target_d+ current_d-12));
+    double cost = logistic(fabs(target_d-6));
     // cout<<"off_middle_lane_cost: "<<cost<<endl;
     return cost;
 }
