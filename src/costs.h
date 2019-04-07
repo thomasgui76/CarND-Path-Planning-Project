@@ -11,7 +11,7 @@
 using namespace std;
 
 const double collision_weight = pow(10,5);
-const double buffer_weight = pow(10,3);
+const double buffer_weight = pow(10,4);
 const double efficiency_weight = pow(10,3);
 const double off_middle_lane_weight = pow(10,3);
 const double keep_lane_weight = pow(10,3);
@@ -87,7 +87,7 @@ double get_buffer_cost(const vector<vector<double>> &trajectory,const map<int,ve
      */
     // double cost = 0;
     double closest = nearest_approach_to_any_vehicle(trajectory,predictions);
-    double cost = logistic(5 * VEHICLE_CIRCLE / closest);
+    double cost = logistic(6 * VEHICLE_CIRCLE / closest);
     // cout<<"buffer_cost: "<<cost<<endl;
     return cost;
 }
@@ -130,7 +130,8 @@ double get_off_middle_lane_cost(const vector<vector<double>> &trajectory,const m
     double current_d = trajectory[1][0];
     // int target_lane = int(target_d/4);
     // double cost = logistic(sqrt(pow((target_d-6),2)));
-    double cost = logistic(fabs(target_d-6));
+    cout<<"off_lane value: "<<fabs(target_d-6)<<endl;
+    double cost = logistic(fabs(target_d+ current_d-12));
     // cout<<"off_middle_lane_cost: "<<cost<<endl;
     return cost;
 }
@@ -142,9 +143,10 @@ double get_keep_lane_cost(const vector<vector<double>> &trajectory,const map<int
     int current_lane = int(current_d/4);
     double best_d = current_lane * 4.0 + 2;
     double closest = nearest_approach_to_any_vehicle(trajectory,predictions);
+    cout<<"closest: "<<closest<<endl;
     closest = min(closest, FOLLOW_DISTANCE);
-    // double cost = logistic(fabs(2*best_d - target_d - current_d)/closest);
-    double cost = logistic(fabs(best_d - target_d)/closest);
+    double cost = logistic(fabs(2 * best_d -target_d-current_d) /closest);
+    // double cost = logistic(fabs(best_d - target_d)/closest);
     return cost;
 }
 
@@ -217,7 +219,7 @@ double calculate_cost(const vector<vector<double>> &trajectory,const map<int,vec
     // cout<<"inlane_buffer_cost: "<<inlane_buff_cost<<endl;
     double total_jerk_cost = get_total_jerk_cost(trajectory,predictions) * total_jerk_weight;
     cout<<"total_jerk_cost: "<<total_jerk_cost<<endl;
-    double total_cost = collision_cost + buffer_cost+ efficiency_cost + off_mid_cost + total_jerk_cost;
+    double total_cost = collision_cost + buffer_cost+ efficiency_cost +off_mid_cost + total_jerk_cost;
     cout<<"total_cost: "<<total_cost<<endl;
     // double total_cost = coll_cost * collision_weight + buff_cost * buffer_weight + effi_cost * efficiency_weight 
     // + off_mid_cost * off_middle_lane_weight + ttl_jerk_cost * total_jerk_weight;

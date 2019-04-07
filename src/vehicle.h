@@ -156,21 +156,21 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
     if(!car_ahead.empty()){
         double distance_to_ahead = get_nearest_distance(target_velocity,car_ahead,DT);
         if(state == "LCL" || state == "LCR"){
-            distance_to_ahead-=12;
+            distance_to_ahead-=6;
         }
         if(distance_to_ahead > FOLLOW_DISTANCE && distance_to_ahead < 2 * FOLLOW_DISTANCE){
             cout<<"approach to car_ahead"<<endl;
             target_velocity = car_ahead[1];
             if (!car_behind.empty()){
-                // target_velocity += 0.224;
-                target_velocity = (target_velocity+car_behind[1])/2 + 0.224;
-                // target_velocity = car_behind[1] + 0.224;
+                // target_velocity += 0.112;
+                target_velocity = (target_velocity+car_behind[1])/2;
+                // target_velocity = car_behind[1];
                 // predict car_behind postion after duration time
                 // and compare with ego_car's position after duration time
                 // double distance_to_behind = this->s - car_behind[0];
                 double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
                 if(state == "LCL" || state == "LCR"){
-                    distance_to_behind -=12;
+                    distance_to_behind -=6;
                 }
                 if(distance_to_behind < FOLLOW_DISTANCE){
                     if(state == "LCL" || state == "LCR"){
@@ -203,9 +203,25 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
         }
         
     }
-    
+    else{
+        // no car_ahead, but there is car_behind in target_lane
+        if (!car_behind.empty()){
+            double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
+            if(state == "LCL" || state == "LCR"){
+                distance_to_behind -=6;
+            }
+            if(distance_to_behind < FOLLOW_DISTANCE){
+                if(state == "LCL" || state == "LCR"){
+                    cout<<"can't turn left or right,because there is other car behind too closed"<<endl;
+                    return {};
+                }
+                
+            }
+        }
+    }
     target_s_dot = target_velocity;
     target_s = this->s + (this->s_dot + target_velocity) * 0.5 * duration;
+    // target_s = this->s + target_velocity * duration;
     // target_s = this->s + 88;
     vector<vector<double>> target = {{target_s,target_s_dot,target_s_ddot},{target_d,target_d_dot,target_d_ddot}};
     // cout<<"print target in generate_target function"<<endl;

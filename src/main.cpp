@@ -34,7 +34,7 @@ int main() {
   const double max_s = 6945.554;
 
   // static int lane = 1;
-  static double ref_velocity = 0; //mph
+  static double ref_velocity = 0; // reference velocity used to generate path_points
   Vehicle ego_car = Vehicle();
   cout<<"show ego_car initiate state: "<<endl;
   ego_car.showVehicle();
@@ -124,8 +124,8 @@ int main() {
           // each other vehicle generate dicrete points with N_Sample size
           // for ego car use previous_path, other_cars predictions start from the end of previous path
           double start = prev_size * PATH_DT;
-          // double start = 0;
-          double duration = DT - start;
+          // double duration = DT - start;
+          double duration = DT;
           map<int,vector<vector<double>>> predictions;
           for (auto sf : sensor_fusion){
             // double other_car_d = sf[6];
@@ -249,11 +249,11 @@ int main() {
 
           for (auto state : states){
             cout<<"state: "<<state<<endl;
-            vector<vector<double>> target = ego_car.generate_target(state,DT,predictions);
+            vector<vector<double>> target = ego_car.generate_target(state,duration,predictions);
             cout<<"print target:"<<endl;
             printVector2D(target);
             if(!target.empty()){
-              vector<vector<double>> trajectory = ego_car.generate_trajectory(target,DT);
+              vector<vector<double>> trajectory = ego_car.generate_trajectory(target,duration);
               cout<<"print trajectory: "<<endl;
               printVector2D(trajectory);
               double cost = calculate_cost(trajectory,predictions);

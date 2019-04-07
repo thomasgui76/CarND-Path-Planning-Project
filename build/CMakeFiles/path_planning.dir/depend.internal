@@ -4,9 +4,14 @@
 CMakeFiles/path_planning.dir/src/main.cpp.o
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Cholesky
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Core
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Dense
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Eigenvalues
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Geometry
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Householder
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Jacobi
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/LU
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/QR
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/SVD
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Cholesky/LDLT.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Cholesky/LLT.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Cholesky/LLT_LAPACKE.h
@@ -140,16 +145,64 @@ CMakeFiles/path_planning.dir/src/main.cpp.o
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Core/util/ReenableStupidWarnings.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Core/util/StaticAssert.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Core/util/XprHelper.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/./ComplexSchur.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/./HessenbergDecomposition.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/./RealQZ.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/./RealSchur.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/./Tridiagonalization.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/ComplexEigenSolver.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/ComplexSchur.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/EigenSolver.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/HessenbergDecomposition.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/RealQZ.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/RealSchur.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/RealSchur_LAPACKE.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Eigenvalues/Tridiagonalization.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/AlignedBox.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/AngleAxis.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/EulerAngles.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Homogeneous.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Hyperplane.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/OrthoMethods.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/ParametrizedLine.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Quaternion.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Rotation2D.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/RotationBase.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Scaling.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Transform.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Translation.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/Umeyama.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Geometry/arch/Geometry_SSE.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Householder/BlockHouseholder.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Householder/Householder.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Householder/HouseholderSequence.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/Jacobi/Jacobi.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/LU/Determinant.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/LU/FullPivLU.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/LU/InverseImpl.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/LU/PartialPivLU.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/LU/PartialPivLU_LAPACKE.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/LU/arch/Inverse_SSE.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/QR/ColPivHouseholderQR.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/QR/CompleteOrthogonalDecomposition.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/QR/FullPivHouseholderQR.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/QR/HouseholderQR.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/QR/HouseholderQR_LAPACKE.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/SVD/BDCSVD.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/SVD/JacobiSVD.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/SVD/JacobiSVD_LAPACKE.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/SVD/SVDBase.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/SVD/UpperBidiagonalization.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/misc/Image.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/misc/Kernel.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/misc/RealSvd2x2.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/misc/blas.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/misc/lapacke.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/misc/lapacke_mangling.h
@@ -160,7 +213,11 @@ CMakeFiles/path_planning.dir/src/main.cpp.o
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/plugins/CommonCwiseUnaryOps.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  /home/thomas/github/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/constants.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/costs.h
  /home/thomas/github/CarND-Path-Planning-Project/src/helpers.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/jmt.h
  /home/thomas/github/CarND-Path-Planning-Project/src/json.hpp
  /home/thomas/github/CarND-Path-Planning-Project/src/main.cpp
  /home/thomas/github/CarND-Path-Planning-Project/src/spline.h
+ /home/thomas/github/CarND-Path-Planning-Project/src/vehicle.h
