@@ -15,7 +15,7 @@ private:
     /* data */
 
 public:
-    int id,current_lane,target_lane;
+    int id,lane;
     string state;
     double s,s_dot,s_ddot, d,d_dot,d_ddot;
 
@@ -42,7 +42,6 @@ public:
      this->d = d;
      this->d_dot = d_dot;
      this->d_ddot = d_ddot;
-     this->state = "KL";
  }
 
  Vehicle::~ Vehicle()
@@ -109,21 +108,30 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
     double target_d;                              // just initilize target_d first, the final value may decided by different state.
     double target_d_dot = 0;                      // when arrive in target_lane, keep in the center, no displacement in lateral.
     double target_d_ddot = 0;                     // no lateral acceleration.
+
+    bool change_lane = false;
+    bool left_change = false;
+    bool right_change = false;
         
+    // based on possible next state to generate target s and d
+    // first decide lane, then decide velocity change. 
     if(state.compare("KL")==0){
+        // keep lane logic is simple, no choice.
         target_lane = current_lane;
         target_d = target_lane * 4 + 2.0;
     }
     else if (state.compare("LCL")==0)
     {   
-        // judge current_lane to keep ego_car in road.
-        // if current_lane is left-most, keep current_lane actually.
+        // judge current lane to keep ego_car in road.
+        // judge whether there are other car in front and following behind;
         if(current_lane>0){
             target_lane = current_lane -1 ;
+            
             target_d = target_lane * 4 + 2.0;
         }
         else
         {
+            // if current_lane is left-most, then the target is invalid, return empty target.
             return {};
         }
     }
@@ -142,6 +150,9 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
         }
         
     }
+
+    // next step, decide velocity
+
     // adjust longitudinal velocity according to distance to the leading car in same lane.
     // assume other cars following behind in same lane may take right action,none of my business.
     // also penalize the consequent trajectory in collision cost function.
@@ -155,27 +166,29 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
 
     if(!car_ahead.empty()){
         double distance_to_ahead = get_nearest_distance(target_velocity,car_ahead,DT);
+        if(state == "LCL" || state == "LCR"){
+            distance_to_ahead-=12;
+        }
         if(distance_to_ahead > FOLLOW_DISTANCE && distance_to_ahead < 2 * FOLLOW_DISTANCE){
             cout<<"approach to car_ahead"<<endl;
             target_velocity = car_ahead[1];
             if (!car_behind.empty()){
                 // target_velocity += 0.112;
                 target_velocity = (target_velocity+car_behind[1])/2+0.224;
-                // target_velocity = car_behind[1] + 0.224;
-                // target_velocity = min(target_velocity,SPEED_LIMIT);
                 // target_velocity = car_behind[1];
                 // predict car_behind postion after duration time
                 // and compare with ego_car's position after duration time
                 // double distance_to_behind = this->s - car_behind[0];
                 double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
-                
+                if(state == "LCL" || state == "LCR"){
+                    distance_to_behind -=12;
+                }
                 if(distance_to_behind < FOLLOW_DISTANCE){
-                    
                     if(state == "LCL" || state == "LCR"){
                         cout<<"can't turn left or right,because there is other car behind too closed"<<endl;
                         return {};
                     }
-                    
+                
                 }
             }
         }
@@ -205,6 +218,9 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
         // no car_ahead, but there is car_behind in target_lane
         if (!car_behind.empty()){
             double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
+            if(state == "LCL" || state == "LCR"){
+                distance_to_behind -=12;
+            }
             if(distance_to_behind < FOLLOW_DISTANCE){
                 if(state == "LCL" || state == "LCR"){
                     cout<<"can't turn left or right,because there is other car behind too closed"<<endl;
@@ -331,8 +347,7 @@ vector<double> Vehicle::get_car_behind(int target_lane,map<int,vector<vector<dou
         // printVector2D(pred_traj);
         int pred_lane = int(pred_traj[0][2]/4);
         if(pred_lane == target_lane){
-            // double other_car_s = pred_traj[N_SAMPLES-1][0];
-            double other_car_s = pred_traj[0][0];
+            double other_car_s = pred_traj[N_SAMPLES-1][0];
             double other_car_vel = pred_traj[0][1];
             double distance_to_behind = this->s - other_car_s;
             if((distance_to_behind < nearest_distance) && (other_car_s < this->s )){
