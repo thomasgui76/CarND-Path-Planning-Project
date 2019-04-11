@@ -282,15 +282,15 @@ int main() {
           
           // double ref_velocity = best_target[0][1];
           // double ref_velocity = ego_car.s_dot;
-          if (target_speed < 0.112){
-            ref_velocity = 0.112;
+          if (target_speed < 0.224){
+            ref_velocity = 0.224;
           }
-          else if(ref_velocity < target_speed-0.112){
-            ref_velocity += 0.112;
+          else if(ref_velocity < target_speed-0.224){
+            ref_velocity += 0.224;
           }
           else if ( ref_velocity>= target_speed )
           {
-            ref_velocity -=0.112;
+            ref_velocity -=0.224;
           }
           
           cout<<"ref_velocity: "<<ref_velocity<<endl;
