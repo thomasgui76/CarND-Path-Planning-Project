@@ -14,7 +14,7 @@ const double collision_weight = pow(10,5);
 const double buffer_weight = pow(10,3);
 const double efficiency_weight = pow(10,3);
 const double off_middle_lane_weight = pow(10,3);
-const double keep_lane_weight = pow(10,3);
+const double keep_lane_weight = pow(10,2);
 // const double in_lane_buffer_weight = pow(10,3);
 const double total_jerk_weight = pow(10,1);
 
@@ -134,7 +134,7 @@ double get_off_middle_lane_cost(const vector<vector<double>> &trajectory,const m
      * penalize ego_car not in middle_lane, push the car to middle_lane.
      */
     double target_d = trajectory[1][N_SAMPLES-1];
-    double target_s = trajectory[0][N_SAMPLES-1];
+    double current_s = trajectory[0][0];
     double current_d = trajectory[1][0];
     int target_lane = int(target_d/4);
     double nearest_to_ahead = 999;
@@ -142,9 +142,9 @@ double get_off_middle_lane_cost(const vector<vector<double>> &trajectory,const m
 
     for(auto prediction : predictions){
         vector<vector<double>> pred_traj = prediction.second;
-        int pred_lane = pred_traj[N_SAMPLES-1][2]/4;
-        double other_car_s = pred_traj[N_SAMPLES-1][0];
-        double distance = target_s - other_car_s;
+        int pred_lane = pred_traj[0][2]/4;
+        double other_car_s = pred_traj[0][0];
+        double distance = current_s - other_car_s;
         if(pred_lane == target_lane){
             if (distance>0 && distance<nearest_to_ahead){
                 nearest_to_ahead = distance;
@@ -155,14 +155,16 @@ double get_off_middle_lane_cost(const vector<vector<double>> &trajectory,const m
         }
     }
     
-    // double cost = logistic(sqrt(pow((target_d-6),2)));
-    // cout<<"off_lane value: "<<fabs(target_d-6)<<endl;
     double lane_cost = (5*(target_d-6)*(target_d-6)+2*(target_d-2)*(target_d-2)+(target_d-10)*(target_d-10))/64;
     cout<<"lane_cost: "<<lane_cost<<endl;
-    double distance_cost = 1 + (FOLLOW_DISTANCE+60)/(nearest_to_ahead+60);
+    /*
+    double distance_cost = 1 + (FOLLOW_DISTANCE+90)/(nearest_to_ahead+90);
     if(nearest_to_ahead <FOLLOW_DISTANCE || nearest_to_behind <FOLLOW_DISTANCE ){
         distance_cost = 2.1;
     }
+    */
+   double distance_cost = (FOLLOW_DISTANCE+5)/(nearest_to_ahead+5) + (FOLLOW_DISTANCE+5)/(nearest_to_behind+5);
+   // double distance_cost = (FOLLOW_DISTANCE+60)/(nearest_to_ahead+60) + 1;
     cout<<"distance_cost: "<<distance_cost<<endl;
     double cost = logistic(lane_cost + distance_cost);
     // cout<<"off_middle_lane_cost: "<<cost<<endl;
@@ -171,14 +173,11 @@ double get_off_middle_lane_cost(const vector<vector<double>> &trajectory,const m
 
 double get_keep_lane_cost(const vector<vector<double>> &trajectory,const map<int,vector<vector<double>>> &predictions){
     double target_d = trajectory[1][N_SAMPLES-1];
-    int target_lane = int(target_d/4);
+    // int target_lane = int(target_d/4);
     double current_d = trajectory[1][0];
-    int current_lane = int(current_d/4);
-    double best_d = current_lane * 4.0 + 2;
-    double closest = nearest_approach_to_any_vehicle(trajectory,predictions);
-    cout<<"closest: "<<closest<<endl;
-    closest = min(closest, FOLLOW_DISTANCE);
-    double cost = logistic(fabs(2 * best_d -target_d-current_d) /closest);
+    // int current_lane = int(current_d/4);
+    
+    double cost = fabs(target_d-current_d)/4;
     // double cost = logistic(fabs(best_d - target_d)/closest);
     return cost;
 }
@@ -224,10 +223,6 @@ double get_total_jerk_cost(const vector<vector<double>> &trajectory,const map<in
     return cost;
 }
 
-double max_jerk_cost(const vector<vector<double>> &trajectory,const map<int,vector<vector<double>>> &predictions){
-
-}
-
 double calculate_cost(const vector<vector<double>> &trajectory,const map<int,vector<vector<double>>> &predictions){
     /**
      * @param trajectory is a 2D vector {{s0,s1,...sn},{d0,d1,...dn}}, n = N_SAMPLES-1.
@@ -241,10 +236,11 @@ double calculate_cost(const vector<vector<double>> &trajectory,const map<int,vec
     cout<<"efficiency_cost: "<<efficiency_cost<<endl;
     double off_mid_cost = get_off_middle_lane_cost(trajectory,predictions) * off_middle_lane_weight;
     cout<<"off_mid_cost: "<<off_mid_cost<<endl;
-    // double keep_lane_cost = get_keep_lane_cost(trajectory, predictions) * keep_lane_weight;
+    double keep_lane_cost = get_keep_lane_cost(trajectory, predictions) * keep_lane_weight;
+    cout<<"keep_lane_cost: "<<keep_lane_cost<<endl;
     // double inlane_buff_cost = in_lane_buffer_cost(trajectory,predictions);
     // double total_jerk_cost = get_total_jerk_cost(trajectory,predictions) * total_jerk_weight;
-    double total_cost = off_mid_cost + efficiency_cost;
+    double total_cost = off_mid_cost + efficiency_cost + keep_lane_cost;
     cout<<"total_cost: "<<total_cost<<endl;
     return total_cost;
 }

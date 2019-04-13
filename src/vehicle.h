@@ -15,7 +15,7 @@ private:
     /* data */
 
 public:
-    int id,current_lane,target_lane;
+    int id,lane;
     string state;
     double s,s_dot,s_ddot, d,d_dot,d_ddot;
 
@@ -97,7 +97,20 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
      * {{target_s, target_s_dot, target_s_ddot},{target_d,target_d_dot,target_d_ddot}}
      */
     // cout<<"enter generate_target function"<<endl;
-    int current_lane = int(this->d/4);
+    int current_lane = -1;
+    if(this->d >=0.8 && this->d <=3.2){
+        this->lane = 0;
+    }
+    else if(this->d >=4.8 && this->d <=7.2){
+        this->lane = 1;
+    }
+    else if(this->d >=8.8 && this->d <=11.2)
+    {
+        this->lane = 2;
+    }
+    current_lane = this->lane;                  // when lane change, if d not into valid range, vehicle's lane keep previous value.
+    
+
     int target_lane=current_lane;               // initilize target_lane same as current_lane, may change according to different state.
     // longitudinal target
     double target_s_ddot = 0;                     // target accel = 0, i.e. after duration T to constant speed.
@@ -148,27 +161,21 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
     // double target_velocity = min(this->s_dot+0.224,SPEED_LIMIT);               // if no car_ahead in same lane, try to drive at the speed_limit
     double target_velocity = SPEED_LIMIT;
 
-    cout<<"current lane: "<<current_lane<<endl;
-    cout<<"target lane: "<<target_lane<<endl;
+    // cout<<"current lane: "<<current_lane<<endl;
+    // cout<<"target lane: "<<target_lane<<endl;
     vector<double> car_ahead = get_car_ahead(target_lane,predictions);
     vector<double> car_behind = get_car_behind(target_lane, predictions);
 
     if(!car_ahead.empty()){
-        double distance_to_ahead = get_nearest_distance(target_velocity,car_ahead,DT);
+        // double distance_to_ahead = get_nearest_distance(target_velocity,car_ahead,DT);
+        double distance_to_ahead = fabs(car_ahead[0] -this->s);
         if(distance_to_ahead > FOLLOW_DISTANCE && distance_to_ahead < 2 * FOLLOW_DISTANCE){
             cout<<"approach to car_ahead"<<endl;
             target_velocity = car_ahead[1];
             if (!car_behind.empty()){
-                // target_velocity += 0.112;
                 target_velocity = (target_velocity+car_behind[1])/2+0.224;
-                // target_velocity = car_behind[1] + 0.224;
-                // target_velocity = min(target_velocity,SPEED_LIMIT);
-                // target_velocity = car_behind[1];
-                // predict car_behind postion after duration time
-                // and compare with ego_car's position after duration time
-                // double distance_to_behind = this->s - car_behind[0];
-                double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
-                
+                //double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
+                double distance_to_behind = fabs(this->s - car_behind[0]);
                 if(distance_to_behind < FOLLOW_DISTANCE){
                     
                     if(state == "LCL" || state == "LCR"){
@@ -188,13 +195,11 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
             else
             {
                 // in "KL" state
-                target_velocity = car_ahead[1] - 0.224;               // when ego car get closer to car_ahead, decrease velocity
+                target_velocity = car_ahead[1] * (distance_to_ahead-TOO_CLOSED)/(FOLLOW_DISTANCE-TOO_CLOSED);               // when ego car get closer to car_ahead, decrease velocity
                 cout<<"close to FOLLOW_DISTANCE"<<endl;
-                // cout<<"target_velocity: "<<target_velocity<<endl;
                 if (distance_to_ahead < TOO_CLOSED){
-                    target_velocity = 0;                              // when too closed to car_ahead, emergency brake
+                    target_velocity = 0.224;                              // when too closed to car_ahead, emergency brake
                     cout<<"warning!!! too closed to car_ahead"<<endl;
-                    // cout<<"target_velocity: "<<target_velocity<<endl;
                 }
             }
             
@@ -204,7 +209,8 @@ vector<vector<double>> Vehicle:: generate_target(string state,double duration, m
     else{
         // no car_ahead, but there is car_behind in target_lane
         if (!car_behind.empty()){
-            double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
+            // double distance_to_behind = get_nearest_distance(target_velocity,car_behind,DT);
+            double distance_to_behind = fabs(this->s - car_behind[0]);
             if(distance_to_behind < FOLLOW_DISTANCE){
                 if(state == "LCL" || state == "LCR"){
                     cout<<"can't turn left or right,because there is other car behind too closed"<<endl;
@@ -294,8 +300,8 @@ vector<double> Vehicle::get_car_ahead(int target_lane,map<int,vector<vector<doub
         if(pred_lane == target_lane){
             double other_car_s = pred_traj[0][0];
             double other_car_vel = pred_traj[0][1];
-            double distance_to_ahead = other_car_s - this->s;
-            if((distance_to_ahead < nearest_distance) && (other_car_s > this->s )){
+            double distance_to_ahead = fabs(other_car_s - this->s);
+            if((distance_to_ahead < nearest_distance) && (other_car_s >= this->s )){
                 nearest_distance = distance_to_ahead;
                 car_ahead_s=other_car_s;
                 car_ahead_vel=other_car_vel;
@@ -334,8 +340,8 @@ vector<double> Vehicle::get_car_behind(int target_lane,map<int,vector<vector<dou
             // double other_car_s = pred_traj[N_SAMPLES-1][0];
             double other_car_s = pred_traj[0][0];
             double other_car_vel = pred_traj[0][1];
-            double distance_to_behind = this->s - other_car_s;
-            if((distance_to_behind < nearest_distance) && (other_car_s < this->s )){
+            double distance_to_behind = fabs(this->s - other_car_s);
+            if((distance_to_behind < nearest_distance) && (other_car_s <= this->s )){
                 nearest_distance = distance_to_behind;
                 car_behind_s = other_car_s;
                 car_behind_vel = other_car_vel;

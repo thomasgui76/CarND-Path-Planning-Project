@@ -39,6 +39,7 @@ int main() {
   cout<<"show ego_car initiate state: "<<endl;
   ego_car.showVehicle();
   ego_car.state = "KL";
+  ego_car.lane = 1;
 
   std::ifstream in_map_(map_file_.c_str(), std::ifstream::in);
 
@@ -124,8 +125,9 @@ int main() {
           // each other vehicle generate dicrete points with N_Sample size
           // for ego car use previous_path, other_cars predictions start from the end of previous path
           double start = prev_size * PATH_DT;
-          // double duration = DT - start;
-          double duration = DT;
+          // consider time delay impact
+          double duration = DT - start;
+          // double duration = DT;
           map<int,vector<vector<double>>> predictions;
           for (auto sf : sensor_fusion){
             // double other_car_d = sf[6];
@@ -254,8 +256,8 @@ int main() {
             printVector2D(target);
             if(!target.empty()){
               vector<vector<double>> trajectory = ego_car.generate_trajectory(target,duration);
-              cout<<"print trajectory: "<<endl;
-              printVector2D(trajectory);
+              // cout<<"print trajectory: "<<endl;
+              // printVector2D(trajectory);
               double cost = calculate_cost(trajectory,predictions);
               if(cost<best_cost){
                 best_cost = cost;
@@ -280,18 +282,27 @@ int main() {
           double target_speed = best_target[0][1];
           cout<<"target_speed: "<<target_speed<<endl;
           
-          // double ref_velocity = best_target[0][1];
-          // double ref_velocity = ego_car.s_dot;
+          // set accelerate_coef;
+          double accelerate_coef = (target_speed-ref_velocity)/SPEED_LIMIT;
+          
           if (target_speed < 0.224){
             ref_velocity = 0.224;
           }
+          else
+          {
+            ref_velocity += accelerate_coef * 0.224;
+          }
+          
+          /*
           else if(ref_velocity < target_speed-0.224){
-            ref_velocity += 0.224;
+            // ref_velocity += 0.224;
+            ref_velocity += accelerate_coef * 0.224;
           }
           else if ( ref_velocity>= target_speed )
           {
-            ref_velocity -=0.224;
+            ref_velocity -= 0.112;
           }
+          */
           
           cout<<"ref_velocity: "<<ref_velocity<<endl;
 

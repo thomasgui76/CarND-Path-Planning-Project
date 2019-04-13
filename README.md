@@ -74,7 +74,6 @@ the path has processed since last time.
 2. get the ego_car(Main) localization data from simulator. for the simulator has delay and We have to smooth the track. for example, the planner generate total 50 path points. we may use the previous path points from simulator, assume prevous path points already used 10, then we only need to generate 40 new points along previous path, not change sharply.
 
 
-
 !["lane"](./img/lane.png)
 
 !["frenet-XY"](./img/frenet.png)

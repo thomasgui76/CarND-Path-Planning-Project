@@ -7,7 +7,7 @@
 #define DELTA_T 0.2
 #define VEHICLE_CIRCLE 1.5      // m
 #define CRASH_DISTANCE 3        // m
-#define TOO_CLOSED 15.0            // m
+#define TOO_CLOSED 15            // m
 #define FOLLOW_DISTANCE 30.0      // m
 #define PATH_DT 0.02            // ego car waypionts time step
 
